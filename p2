@@ -1,0 +1,5 @@
+//enter p2
+open 3
+wait 1
+close 3
+wait 1

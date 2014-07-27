@@ -1,0 +1,7 @@
+loop 3 {
+open 1
+wait 3 
+close 1
+wait 3
+}
+wait

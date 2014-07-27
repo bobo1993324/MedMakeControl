@@ -1,0 +1,25 @@
+import p1
+import p2
+//enter main
+open 2
+process 1 20 20 20 3 5 
+wait
+process 2 20 20 20 3 5 1
+wait
+process 3 20 20 3 5 10
+wait
+setTemp 1 50.5
+setTemp 2 -1
+close 3,6
+waitT3Until > 50
+open 5
+waitT3Until < 60
+wait
+close 4,10,24
+wait 2
+loop 4 {
+	open 1
+	wait 0.5
+	close 1 
+	wait 0.5
+}
