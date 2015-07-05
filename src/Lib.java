@@ -91,10 +91,9 @@ class Lib {
 		}
 		System.out.println(Configure.COMM40);
 		System.out.println(findTmp + " "+ find40);
-		if(findTmp&&find40){
+		if (find40) {
 			return true;
-		}
-		else{
+		} else {
 			closeCOMMs();
 			return false;
 		}

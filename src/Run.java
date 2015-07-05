@@ -48,7 +48,7 @@ public class Run implements Runnable {
 		this.code = sb.toString();
 		if (!isRunning) {
 			isRunning = true;
-			if (MainFrame.hasSerial) {
+			if (MainFrame.hasTempSerial) {
 				tempThread = new Thread(new Runnable() {
 					public void run() {
 						int errCount = 0;
@@ -385,7 +385,7 @@ public class Run implements Runnable {
 				System.out.printf("%d ", ba[i]);
 		}
 		System.out.println();
-		if (MainFrame.hasSerial) {
+		if (MainFrame.hasTempSerial) {
 			for (int j = 0; j < 2; j++) {
 				MainFrame.tempOut.write(ba, 0, ba.length);
 				Thread.currentThread();

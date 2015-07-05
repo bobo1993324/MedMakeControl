@@ -50,7 +50,7 @@ public class RunFrame extends JFrame {
 			public void windowClosed(WindowEvent e) {
 				Run.abort();
 				drawLineGraph.close();
-				if (MainFrame.hasSerial)
+				if (MainFrame.hasTempSerial)
 					tempTimer.cancel();
 				fortyTimer.cancel();
 			}
@@ -80,7 +80,7 @@ public class RunFrame extends JFrame {
 		textField = new JTextField();
 		textField.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
-				if (e.getKeyCode() == KeyEvent.VK_ENTER && !MainFrame.hasSerial)
+				if (e.getKeyCode() == KeyEvent.VK_ENTER && !MainFrame.hasTempSerial)
 					Run.opTemp(0, Run.WRITE,
 							Double.parseDouble(textField.getText()));
 			}
@@ -96,7 +96,7 @@ public class RunFrame extends JFrame {
 		textField_1.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				if (e.getKeyCode() == KeyEvent.VK_ENTER && !MainFrame.hasSerial)
+				if (e.getKeyCode() == KeyEvent.VK_ENTER && !MainFrame.hasTempSerial)
 					Run.opTemp(1, Run.WRITE,
 							Double.parseDouble(textField_1.getText()));
 			}
@@ -112,7 +112,7 @@ public class RunFrame extends JFrame {
 		textField_2.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				if (e.getKeyCode() == KeyEvent.VK_ENTER && !MainFrame.hasSerial)
+				if (e.getKeyCode() == KeyEvent.VK_ENTER && !MainFrame.hasTempSerial)
 					Run.opTemp(2, Run.WRITE,
 							Double.parseDouble(textField_2.getText()));
 
@@ -141,7 +141,7 @@ public class RunFrame extends JFrame {
 		});
 		panel.add(btnNewButton, "cell 0 6 2 1,alignx center,aligny bottom");
 
-		if (MainFrame.hasSerial) {
+		if (MainFrame.hasTempSerial) {
 			tempTimer = new Timer();
 			tempTimer.scheduleAtFixedRate(new TimerTask() {
 				public void run() {
@@ -182,11 +182,13 @@ public class RunFrame extends JFrame {
 
 	public void init2() {
 		drawLineGraph = new DrawLineGraph(this);
-		recordTimer.scheduleAtFixedRate(new TimerTask() {
-			@Override
-			public void run() {
-				drawLineGraph.update(Run.temperature[2]);
-			}
-		}, 3000, 3000);
+		if (MainFrame.tempCP != null) {
+			recordTimer.scheduleAtFixedRate(new TimerTask() {
+				@Override
+				public void run() {
+					drawLineGraph.update(Run.temperature[2]);
+				}
+			}, 3000, 3000);
+		}
 	}
 }

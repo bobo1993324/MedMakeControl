@@ -30,6 +30,7 @@ public class MainFrame {
 	public static int debugLevel = 0;
 	public JFrame frmportscontrol;
 	static boolean hasSerial = false;
+	static boolean hasTempSerial = false;
 	static CommPort tempCP, fortyPortsCP;
 	static OutputStream tempOut;
 	static InputStream tempIn;
@@ -60,7 +61,7 @@ public class MainFrame {
 	 */
 	public MainFrame() {
 		initialize();
-		hasSerial = testSerial();
+		testSerial();
 		Configure.readAll();
 		if (Configure.currentFilePath!=null && (new File(Configure.currentFilePath).exists())) {
 			try {
@@ -73,7 +74,12 @@ public class MainFrame {
 		}
 	}
 
-	private boolean testSerial() {
+	/**
+	 * Find out whether temp serial port are connected, and is there a serial
+	 * port for control circuit.
+	 */
+	private void testSerial() {
+		System.out.println(System.getProperty("java.library.path"));
 		Enumeration<?> emunPort = CommPortIdentifier.getPortIdentifiers();
 		int numberOfPorts = 0;
 		boolean findTmp = false;
@@ -117,18 +123,26 @@ public class MainFrame {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			// numberOfPorts++;
 		}
 		System.out.println(numberOfPorts + " ports found");
 		if (findTmp) {
 			JOptionPane.showMessageDialog(frmportscontrol, "find temp and "
 					+ (numberOfPorts - 1) + " comms");
-			return true;
+			hasSerial = true;
+			hasTempSerial = true;
+		} else if (numberOfPorts > 0) {
+			// Disable timer and just to for ports
+			String msg = "No temp found, just go with port control.";
+			System.out.println(msg);
+			JOptionPane.showMessageDialog(frmportscontrol, msg);
+			hasSerial = true;
+			hasTempSerial = false;
 		} else {
-			System.out.println("temp not found");
-			JOptionPane.showMessageDialog(frmportscontrol, "temp not found");
+			System.out.println("No serial port found.");
+			JOptionPane.showMessageDialog(frmportscontrol, "No serial port found.");
+			hasSerial = false;
+			hasTempSerial = false;
 		}
-		return false;
 	}
 
 	/**
@@ -207,8 +221,9 @@ public class MainFrame {
 		btnRun.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if(MainFrame.hasSerial&&!Lib.openCOMMs()){
-					JOptionPane.showMessageDialog((Component) e.getSource(), "error opening ports");
+				if (MainFrame.hasSerial && !Lib.openCOMMs()) {
+					JOptionPane.showMessageDialog((Component) e.getSource(),
+							"error opening ports");
 					return;
 				}
 				CheckErr ce = new CheckErr(0);
